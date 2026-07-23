@@ -104,12 +104,56 @@ Built as a 4-week data science engagement for **NorthBay Living** (Zidio Develop
 
 ## 🏗️ Architecture & Tech Stack
 
-### **System Architecture**
-PROJECT FORESIGHT
-            AI-Powered Demand & Inventory Intelligence Platform
-┌──────────────────────────────────────────────────────────────────────────────────────┐ │ INPUT DATA SOURCES │ ├──────────────────────────────────────────────────────────────────────────────────────┤ │ 📊 Online Retail II Dataset (2009–2011 Transactions) │ │ 📦 Inventory Snapshot (Simulated using Reorder Point Logic) │ │ 📅 Calendar Features (Holidays & Seasonality) │ │ 🛍️ SKU Master (Top 200 Products by Revenue) │ └──────────────────────────────────────────────────────────────────────────────────────┘ │ ▼ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │ LAYER 1 — DATA PIPELINE │ │ src/pipeline.py │ ├──────────────────────────────────────────────────────────────────────────────────────┤ │ • Data ingestion & validation │ │ • Remove duplicates, cancelled orders & invalid records │ │ • Handle missing values │ │ • Feature engineering (promo_flag, revenue, temporal features) │ │ • Select Top 200 SKUs │ │ • Generate analysis-ready datasets │ └──────────────────────────────────────────────────────────────────────────────────────┘ │ ▼ sales_daily.csv │ sku_master.csv calendar.csv │ inventory_snapshots.csv │ ▼ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │ LAYER 2 — DEMAND FORECASTING ENGINE │ │ src/forecast.py │ ├──────────────────────────────────────────────────────────────────────────────────────┤ │ • Seasonal-Naive Baseline │ │ • Feature Engineering │ │ ├── Lag Features (1,2,4,8,52 weeks) │ │ ├── Rolling Mean & Standard Deviation │ │ └── Calendar Features │ │ • LightGBM Regression Model │ │ • Rolling-Origin Cross Validation (6 folds) │ │ • 8-Week Demand Forecast + Confidence Intervals │ └──────────────────────────────────────────────────────────────────────────────────────┘ │ ▼ forecast.csv │ ▼ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │ LAYER 3 — INVENTORY RISK ENGINE │ │ src/risk.py │ ├──────────────────────────────────────────────────────────────────────────────────────┤ │ • Combine Forecast + Current Inventory │ │ • Stockout Risk Scoring │ │ • Overstock Risk Scoring │ │ • Business Impact Estimation (£ Value at Risk) │ │ • Inventory Action Recommendation │ │ • Reorder Now │ │ • Monitor │ │ • Markdown │ │ • Overstock Alert │ └──────────────────────────────────────────────────────────────────────────────────────┘ │ ▼ risk_scores.csv │ ┌───────────────────┴────────────────────┐ ▼ ▼ ┌──────────────────────────────────┐ ┌──────────────────────────────────┐ │ STREAMLIT DASHBOARD (D5) │ │ FASTAPI SERVICE (D6) │ ├──────────────────────────────────┤ ├──────────────────────────────────┤ │ • KPI Cards │ │ • GET /sku/{id} │ │ • Demand Forecast Charts │ │ • POST /batch │ │ • Inventory Risk Dashboard │ │ • Forecast & Risk Predictions │ │ • Decision Support Interface │ │ • JSON REST API │ │ • Interactive Filtering │ │ • External Integration │ └──────────────────────────────────┘ └──────────────────────────────────┘ │ │ └───────────────────┬────────────────────┘ ▼ ┌──────────────────────────────────────────────────────────────────────────────────────┐ │ BUSINESS DECISION MAKERS │ ├──────────────────────────────────────────────────────────────────────────────────────┤ │ 🏪 Operations Team │ 📦 Inventory Planner │ 💰 Finance │ 📈 Merchandising │ └──────────────────────────────────────────────────────────────────────────────────────┘
+| Layer | Component | Purpose |
+|-------|-----------|---------|
+| **Input Layer** | Online Retail II Dataset, Inventory Snapshots, SKU Master, Calendar | Historical sales and business data |
+| **Layer 1** | `src/pipeline.py` | Data ingestion, cleaning, validation, and feature engineering |
+| **Layer 2** | `src/forecast.py` | LightGBM demand forecasting with rolling-origin cross validation |
+| **Layer 3** | `src/risk.py` | Inventory risk scoring and business recommendations |
+| **Layer 4** | Streamlit Dashboard & FastAPI Service | Interactive decision support and REST API |
+| **Business Layer** | Operations, Merchandising, Finance | Inventory planning and business decisions |
 
-Code
+---
+
+### **System Architecture**
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                        PROJECT FORESIGHT                                     │
+│       AI-Powered Demand & Inventory Intelligence Platform                    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+        INPUT DATA
+             │
+             ▼
+┌──────────────────────────┐
+│ Data Pipeline            │
+│ src/pipeline.py          │
+└──────────────────────────┘
+             │
+             ▼
+     Processed CSV Tables
+             │
+             ▼
+┌──────────────────────────┐
+│ Forecast Engine          │
+│ LightGBM + Backtesting   │
+└──────────────────────────┘
+             │
+             ▼
+┌──────────────────────────┐
+│ Inventory Risk Engine    │
+└──────────────────────────┘
+        │            │
+        ▼            ▼
+┌─────────────┐ ┌──────────────┐
+│ Streamlit   │ │ FastAPI      │
+│ Dashboard   │ │ REST API     │
+└─────────────┘ └──────────────┘
+        │            │
+        └─────┬──────┘
+              ▼
+<img width="1024" height="1536" alt="forecast architecture diagram" src="https://github.com/user-attachments/assets/2d7693f7-85fe-41be-b10f-a0bffd3122ed" />
 
 ### **Tech Stack**
 
@@ -316,18 +360,23 @@ foresight/
 ├── requirements.txt
 └── README.md
 ```
-📱 Dashboard Walkthrough
+
+## 📱 Dashboard Walkthrough
+
 <img width="1917" height="982" alt="foresight 1" src="https://github.com/user-attachments/assets/ec090426-4f55-4405-8e66-d6eb61be050c" />
+
 
 <img width="1916" height="987" alt="foresight 3 " src="https://github.com/user-attachments/assets/ad16a411-a8f5-4a99-b405-2d1b5aeb2358" />
 
+
 <img width="1917" height="977" alt="foresight 4" src="https://github.com/user-attachments/assets/1e875420-45dc-4521-a303-ce5122d84af5" />
+
 
 ---
 
-# 🚀 Deployment
+## 🚀 Deployment
 
-## 🌐 Dashboard (Streamlit Community Cloud)
+### 🌐 Dashboard (Streamlit Community Cloud)
 
 1. Push this repository to GitHub.
 2. Visit **https://share.streamlit.io**
@@ -344,7 +393,7 @@ app/streamlit_app.py
 
 ---
 
-## ⚡ API Deployment
+### ⚡ API Deployment
 
 ### Recommended: Render
 
@@ -373,11 +422,11 @@ After deployment, copy the public URL and replace the API placeholder in this RE
 
 ---
 
-# 📊 Dashboard Workflow
+## 📊 Dashboard Workflow
 
 The dashboard is designed for operations managers to make daily inventory decisions.
 
-## 🌅 Morning Review (8:00 AM)
+### 🌅 Morning Review (8:00 AM)
 
 - Open the dashboard.
 - Review KPI cards.
@@ -389,7 +438,7 @@ The dashboard is designed for operations managers to make daily inventory decisi
 
 ---
 
-## 📦 Reorder Planning (8:15 AM)
+### 📦 Reorder Planning (8:15 AM)
 
 Navigate to **Tab 1 — Reorder Priorities**
 
@@ -400,7 +449,7 @@ Navigate to **Tab 1 — Reorder Priorities**
 
 ---
 
-## 🏷️ Markdown Planning (10:00 AM)
+### 🏷️ Markdown Planning (10:00 AM)
 
 Filter by:
 
@@ -412,7 +461,7 @@ Review slow-moving inventory and coordinate promotions with the marketing team.
 
 ---
 
-## 📈 Forecast Review (2:00 PM)
+### 📈 Forecast Review (2:00 PM)
 
 Select a SKU using the sidebar.
 
@@ -430,7 +479,7 @@ Questions to ask:
 
 ---
 
-## 🎯 Outcome
+### 🎯 Outcome
 
 ✔ Data-driven inventory planning
 
@@ -442,7 +491,7 @@ Questions to ask:
 
 ---
 
-# 📈 Backtest Validation
+## 📈 Backtest Validation
 
 | Fold | Seasonal-Naive WAPE | FORESIGHT WAPE | Winner |
 |------|--------------------:|---------------:|:------:|
@@ -461,7 +510,7 @@ Questions to ask:
 - Expanding Training Window
 - 8-week Forecast Horizon
 
-### Validation Principles
+#### Validation Principles
 
 - ✅ Beats baseline in every fold
 - ✅ Stable performance across time
@@ -476,7 +525,7 @@ reports/backtest_results.csv
 
 ---
 
-# ✅ Deliverables
+## ✅ Deliverables
 
 | ID | Deliverable | Status | Location |
 |----|------------|:------:|---------|
@@ -490,7 +539,7 @@ reports/backtest_results.csv
 
 ---
 
-# 📂 Project Files
+## 📂 Project Files
 
 | File | Purpose |
 |------|---------|
@@ -504,23 +553,7 @@ reports/backtest_results.csv
 
 ---
 
-# 🎥 Demo Video
-
-> **Coming Soon**
-
-The demo will include:
-
-- Repository overview
-- Data pipeline
-- Dashboard walkthrough
-- Forecasting
-- Inventory risk analysis
-- API demonstration
-- Business recommendations
-
----
-
-# ❓ Frequently Asked Questions
+## ❓ Frequently Asked Questions
 
 <details>
 
@@ -584,7 +617,7 @@ Inventory snapshots are simulated using industry-standard reorder-point logic fo
 
 ---
 
-# 📚 References
+## 📚 References
 
 - **Dataset:** UCI Machine Learning Repository — Online Retail II
 - **Forecast Validation:** Rolling-Origin Cross Validation
@@ -596,7 +629,7 @@ Inventory snapshots are simulated using industry-standard reorder-point logic fo
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
 | Category | Technologies |
 |-----------|--------------|
@@ -611,7 +644,7 @@ Inventory snapshots are simulated using industry-standard reorder-point logic fo
 
 ---
 
-# 📄 License & Attribution
+## 📄 License & Attribution
 
 **Project**
 
