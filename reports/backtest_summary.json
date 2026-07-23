@@ -1,0 +1,8 @@
+{
+  "avg_wape_model": 0.6153,
+  "avg_wape_baseline": 0.8747,
+  "improvement_pct": 29.7,
+  "beats_baseline": true,
+  "n_folds": 6,
+  "horizon_weeks": 8
+}
