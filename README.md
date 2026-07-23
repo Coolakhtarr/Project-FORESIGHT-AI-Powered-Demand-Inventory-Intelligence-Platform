@@ -117,41 +117,6 @@ Built as a 4-week data science engagement for **NorthBay Living** (Zidio Develop
 
 ### **System Architecture**
 
-
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                        PROJECT FORESIGHT                                     │
-│       AI-Powered Demand & Inventory Intelligence Platform                    │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-        INPUT DATA
-             │
-             ▼
-┌──────────────────────────┐
-│ Data Pipeline            │
-│ src/pipeline.py          │
-└──────────────────────────┘
-             │
-             ▼
-     Processed CSV Tables
-             │
-             ▼
-┌──────────────────────────┐
-│ Forecast Engine          │
-│ LightGBM + Backtesting   │
-└──────────────────────────┘
-             │
-             ▼
-┌──────────────────────────┐
-│ Inventory Risk Engine    │
-└──────────────────────────┘
-        │            │
-        ▼            ▼
-┌─────────────┐ ┌──────────────┐
-│ Streamlit   │ │ FastAPI      │
-│ Dashboard   │ │ REST API     │
-└─────────────┘ └──────────────┘
-        │            │
-        └─────┬──────┘
               ▼
 <img width="1024" height="1536" alt="forecast architecture diagram" src="https://github.com/user-attachments/assets/2d7693f7-85fe-41be-b10f-a0bffd3122ed" />
 
@@ -626,21 +591,6 @@ Inventory snapshots are simulated using industry-standard reorder-point logic fo
 - **Visualization:** Plotly
 - **API:** FastAPI
 - **Deployment:** Streamlit Community Cloud, Render, Railway
-
----
-
-## 🛠️ Technology Stack
-
-| Category | Technologies |
-|-----------|--------------|
-| Language | Python |
-| Data Processing | Pandas, NumPy |
-| Machine Learning | LightGBM, Scikit-learn |
-| Visualization | Plotly, Matplotlib |
-| Dashboard | Streamlit |
-| API | FastAPI |
-| Validation | Rolling-Origin Cross Validation |
-| Data Storage | CSV |
 
 ---
 
