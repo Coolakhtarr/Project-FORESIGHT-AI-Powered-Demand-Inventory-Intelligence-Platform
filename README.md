@@ -10,8 +10,8 @@ Built as a 4-week data science engagement for **NorthBay Living** (Zidio Develop
 
 | Link | Status |
 |---|---|
-| **Live Dashboard** | [Streamlit Cloud - Add URL here](#) |
-| **Scoring API** | [FastAPI - Add URL here](#) |
+| **Live Dashboard** | [Streamlit Cloud -](#https://project-foresight-ai-powered-demand-inventory-intelligence-pla.streamlit.app/#prioritised-action-list) |
+| **Scoring API** | [FastAPI - ](#https://your-api-name.onrender.com/docs) |
 | **Demo Video** | [YouTube 5-min walkthrough - Add link after recording](#) |
 | **GitHub Repository** | [Coolakhtarr/Project-FORESIGHT-...](https://github.com/Coolakhtarr/Project-FORESIGHT-AI-Powered-Demand-Inventory-Intelligence-Platform) |
 
@@ -229,65 +229,65 @@ any lag/rolling feature), reported honestly whether the model won or lost
 each fold — it won every fold.
 
 
-🔄 How the System Works
-Step 1: Data Pipeline
-Input: 2 years of real transaction history (UCI Online Retail II dataset, ~1.07M rows)
-Processing:
+## 🔄 How the System Works
+### Step 1: Data Pipeline
+- Input: 2 years of real transaction history (UCI Online Retail II dataset, ~1.07M rows)
+- Processing:
 Remove duplicates, cancelled orders, non-products
 Fill missing values, fix data types
 Select top 200 SKUs by revenue
 Engineer features (e.g., promo_flag from price data)
-Output: 4 analysis-ready CSV files ready for analysis
-Step 2: Demand Forecasting
-Baseline: Create seasonal-naive forecast (demand = same week 52 weeks ago)
-Features: Create lag features (1,2,4,8,52 weeks) and rolling statistics (mean, std of 4/8-week windows)
-Model: Train LightGBM (gradient-boosted trees) on all historical data
-Backtest: Run rolling-origin cross-validation on 6 folds
+- Output: 4 analysis-ready CSV files ready for analysis
+### Step 2: Demand Forecasting
+- Baseline: Create seasonal-naive forecast (demand = same week 52 weeks ago)
+- Features: Create lag features (1,2,4,8,52 weeks) and rolling statistics (mean, std of 4/8-week windows)
+- Model: Train LightGBM (gradient-boosted trees) on all historical data
+- Backtest: Run rolling-origin cross-validation on 6 folds
 Train on past data up to week T
 Test on weeks T+1 to T+8
 Repeat with expanding window
 Compare model WAPE vs baseline WAPE
-Result: 29.7% improvement (model WAPE 0.615 vs baseline 0.875) ✅
-Forecast: Generate 8-week forecast with 80% confidence intervals
-Step 3: Risk Scoring
-Get latest inventory: Current on-hand, on-order, lead time per SKU
-Stockout risk: (forecast demand over lead time - available stock) / demand × 100
-Overstock risk: (excess units on hand) / (on-hand units) × 100
-Assign quadrant: Based on risk thresholds (0.5 on each axis)
-Reorder Now: high stockout, low overstock (RED)
-Markdown / Clear: low stockout, high overstock (PURPLE)
-Watch / Volatile: high on both (YELLOW)
-Healthy: low on both (GREEN)
-Business impact: Calculate £ revenue at risk (shortfall × price) + £ capital locked (excess × cost)
-Output: Sorted by value_at_stake (highest first)
-Step 4: Dashboard & API Serving
-Dashboard (Streamlit): Reads from data/processed/ CSVs, displays 3 interactive tabs, filters in real-time
-API (FastAPI): Serves same data via REST endpoints (/sku/{id}, /batch)
-Both available 24/7 — no retraining needed for day-to-day use
-🔑 Key Assumptions
-Inventory is simulated (not real data)
+- Result: 29.7% improvement (model WAPE 0.615 vs baseline 0.875) ✅
+- Forecast: Generate 8-week forecast with 80% confidence intervals
+### Step 3: Risk Scoring
+- Get latest inventory: Current on-hand, on-order, lead time per SKU
+- Stockout risk: (forecast demand over lead time - available stock) / demand × 100
+- Overstock risk: (excess units on hand) / (on-hand units) × 100
+- Assign quadrant: Based on risk thresholds (0.5 on each axis)
+    - Reorder Now: high stockout, low overstock (RED)
+    -  Markdown / Clear: low stockout, high overstock (PURPLE)
+    - Watch / Volatile: high on both (YELLOW)
+    -  Healthy: low on both (GREEN)
+- Business impact: Calculate £ revenue at risk (shortfall × price) + £ capital locked (excess × cost)
+- Output: Sorted by value_at_stake (highest first)
+### Step 4: Dashboard & API Serving
+- Dashboard (Streamlit): Reads from data/processed/ CSVs, displays 3 interactive tabs, filters in real-time
+- API (FastAPI): Serves same data via REST endpoints (/sku/{id}, /batch)
+- Both available 24/7 — no retraining needed for day-to-day use
 
-Combines reorder-point formula (95% service level)
-Category-specific lead times (12-30 days)
-Must be replaced with real inventory data before going live
-Unit cost at 55% of list price (45% gross margin assumed)
+## 🔑 Key Assumptions
+1. Inventory is simulated (not real data)
+- Combines reorder-point formula (95% service level)
+- Category-specific lead times (12-30 days)
+- Must be replaced with real inventory data before going live
 
-No real cost data available in source dataset
-Typical for D2C home goods
-Update with real costs if available
-Promo flag inferred from price drops (≥15% below 28-day median)
+2. Unit cost at 55% of list price (45% gross margin assumed)
+- No real cost data available in source dataset
+- Typical for D2C home goods
+- Update with real costs if available
 
-Source data has no explicit promotion field
-Replace with real promotion data if available
-Top 200 SKUs only
+3. Promo flag inferred from price drops (≥15% below 28-day median)
+- Source data has no explicit promotion field
+- Replace with real promotion data if available
 
-Very low-revenue items (new/discontinued) not included
-Matches NorthBay's stated scale in brief
-No data leakage in features
+4. Top 200 SKUs only
+- Very low-revenue items (new/discontinued) not included
+- Matches NorthBay's stated scale in brief
 
-All lag features use .shift(1) before any rolling operations
-Future information never enters a feature
-Validated via rolling-origin backtesting
+5. No data leakage in features
+- All lag features use .shift(1) before any rolling operations
+- Future information never enters a feature
+- Validated via rolling-origin backtesting
 
 Full rationale for every decision: `reports/eda_memo.md`.
 
@@ -323,148 +323,320 @@ foresight/
 
 <img width="1917" height="977" alt="foresight 4" src="https://github.com/user-attachments/assets/1e875420-45dc-4521-a303-ce5122d84af5" />
 
-🌐 Deployment Guide
-Dashboard: Streamlit Community Cloud (Recommended)
-Steps:
+---
 
-Push repository to GitHub (if not already done)
-Go to https://streamlit.io/cloud
-Sign in with GitHub account
-Click "New app" → Select:
-Repository: Coolakhtarr/Project-FORESIGHT-...
-Branch: main
-File path: app/streamlit_app.py
-Deploy (Streamlit handles setup automatically)
-Copy public URL and add to README top
-Result: Dashboard stays live 24/7. Data refreshes when you push new data/processed/ CSVs to GitHub.
+# 🚀 Deployment
 
-API: Render (Recommended) / Railway / Hugging Face Spaces
-Using Render:
+## 🌐 Dashboard (Streamlit Community Cloud)
 
-Go to https://render.com
-Sign up (free tier available)
-Create "New Web Service" → Connect GitHub repo
+1. Push this repository to GitHub.
+2. Visit **https://share.streamlit.io**
+3. Sign in with GitHub.
+4. Select this repository.
+5. Set the main file:
+
+```text
+app/streamlit_app.py
+```
+
+6. Click **Deploy**.
+7. Copy the generated URL and replace the placeholder in this README.
+
+---
+
+## ⚡ API Deployment
+
+### Recommended: Render
+
+1. Visit **https://render.com**
+2. Create a free account.
+3. Click **New → Web Service**
+4. Connect this GitHub repository.
+
 Configure:
-Build command: pip install -r requirements.txt
-Start command: uvicorn service.main:app --host 0.0.0.0 --port $PORT
-Deploy → Get public URL
-Add URL to README
-Result: API available 24/7, responds in <500ms per request.
 
-🎯 Using the Dashboard (For Operations Manager)
-Daily Workflow:
+| Setting | Value |
+|---------|-------|
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `uvicorn service.main:app --host 0.0.0.0 --port $PORT` |
 
-Morning standup (8:00 AM)
+Click **Deploy**.
 
-Open dashboard
-Check 4 KPI cards: "Revenue at risk: £156,400" → understand the stakes
-Go to Tab 3 (Decisioning Grid) → identify 5-10 largest red/purple bubbles
-Take action (8:15 AM)
+After deployment, copy the public URL and replace the API placeholder in this README.
 
-Go to Tab 1 (Reorder Priorities)
-Filter by "Reorder Now" status only
-Work top-down, contact suppliers for top 10 SKUs
-Place replenishment orders
-Review slow movers (10:00 AM)
+**Expected Performance**
 
-Filter Tab 1 by "Markdown / Clear" status
-Identify which products to promote/discount
-Work with Marketing to create flash sale
-Deep dive on specific product (2:00 PM)
+- ✅ Available 24/7
+- ✅ REST API
+- ✅ JSON responses
+- ✅ Typical latency <500 ms
 
-Use sidebar to select specific SKU
-Go to Tab 2 (Forecast vs Actual)
-Check: Does forecast match historical pattern? If yes, trust it. If no, investigate.
-Result: Data-driven reordering decisions with clear £ value attached to every action.
+---
 
-📈 Backtest Validation (The Proof)
-Fold	Seasonal-Naive WAPE	FORESIGHT WAPE	Winner
-1	0.884	0.620	Model ✓
-2	0.869	0.610	Model ✓
-3	0.876	0.618	Model ✓
-4	0.882	0.615	Model ✓
-5	0.870	0.610	Model ✓
-6	0.873	0.617	Model ✓
-Average	0.875	0.615	Model wins all 6 folds
-Improvement	—	—	29.7%
-Method: Rolling-origin cross-validation with expanding training window (mimics real forecasting workflow)
+# 📊 Dashboard Workflow
 
-Key validation principles:
+The dashboard is designed for operations managers to make daily inventory decisions.
 
-✅ Model beats baseline in EVERY fold (not cherry-picked)
-✅ Consistent performance across different time periods
-✅ No overfitting (test folds show stable metrics)
-✅ Improvement is honest (not fabricated)
-Full results: reports/backtest_results.csv
+## 🌅 Morning Review (8:00 AM)
 
-📝 Deliverables Checklist
-#	Deliverable	Description	Status	Location
-D1	Data Pipeline	Reproducible ingestion + cleaning	✅	src/pipeline.py
-D2	EDA Memo	Data-quality insights & rationale	✅	reports/eda_memo.md
-D3	Forecast Model	Weekly demand forecast, backtested	✅	src/forecast.py + backtest results
-D4	Risk Scoring	Stockout/overstock risk per SKU	✅	src/risk.py + data/processed/risk_scores.csv
-D5	Dashboard	Interactive Streamlit app	✅	app/streamlit_app.py (live: add URL)
-D6	Scoring API	REST API for forecast + risk	✅	service/main.py (live: add URL)
-D7	Executive Readout	Stakeholder deck	✅	reports/executive_readout.pptx
-📚 Key Files
-File	Lines	What It Does
-src/pipeline.py	360	Cleans 1.07M raw rows → 4 analysis-ready tables
-src/forecast.py	286	Trains LightGBM, backtests (6 folds), generates forecast
-src/risk.py	132	Scores stockout/overstock risk per SKU
-app/streamlit_app.py	212	Interactive dashboard with 3 tabs
-service/main.py	132	FastAPI REST endpoints for scoring
-reports/eda_memo.md	—	Data insights & business patterns
-reports/backtest_results.csv	—	Fold-by-fold validation metrics
-📺 Demo Video
-Watch a complete 5-minute walkthrough:
+- Open the dashboard.
+- Review KPI cards.
+- Check metrics such as:
+  - Revenue at Risk
+  - Stockout Risk
+  - Overstock Value
+  - Critical SKUs
 
-[Add YouTube link after recording]
+---
 
-The video covers:
+## 📦 Reorder Planning (8:15 AM)
 
-GitHub repository structure and code organization
-Dashboard home page with KPI cards and filters
-Tab 1: Reorder/Markdown Priorities action list
-Tab 2: Forecast vs Actual demand chart
-Tab 3: Decisioning Grid risk matrix
-API documentation and scoring examples
-Business impact and key metrics
-❓ FAQ
-Q: Can I run the dashboard without downloading raw data?
-A: Yes! All data/processed/ files are committed to GitHub. Just clone and run streamlit run app/streamlit_app.py.
+Navigate to **Tab 1 — Reorder Priorities**
 
-Q: How do I update the forecast?
-A: Run python src/forecast.py. The dashboard automatically reads the updated forecast.csv.
+- Filter by **Reorder Now**
+- Review highest-priority SKUs
+- Contact suppliers
+- Place replenishment orders
 
-Q: What if I disagree with a forecast?
-A: Check Tab 2 chart — does the model forecast track historical pattern well? If yes, trust it. If no, investigate with your data scientist.
+---
 
-Q: Can I integrate with my purchase order system?
-A: Yes! Call the API: GET /sku/{sku_id} returns forecast + risk + recommended action as JSON.
+## 🏷️ Markdown Planning (10:00 AM)
 
-Q: Is the inventory data real?
-A: No, it's simulated for this engagement using industry-standard reorder-point formulas. Replace with real inventory data before going live.
+Filter by:
 
-🔗 References
-Data Source: UCI Machine Learning Repository (Online Retail II dataset)
-Backtest: Rolling-origin cross-validation, 6 folds, 8-week forecast horizon
-Forecasting Model: LightGBM with 13 engineered features
-Dashboard: Streamlit framework + Plotly visualization
-API: FastAPI + Pydantic models
-Deployment: Streamlit Cloud + Render/Railway
-📄 License & Attribution
-Project: FORESIGHT — Demand & Inventory Intelligence
-Engagement: 4-week data science internship
-Organization: Zidio Development, Data Science & Analytics Track
-Client: NorthBay Living
-Tech Stack: Python, LightGBM, Streamlit, FastAPI, Plotly
+```text
+Markdown / Clear
+```
 
-Status: ✅ Ready for Production Deployment
-Last Updated: July 2026
+Review slow-moving inventory and coordinate promotions with the marketing team.
 
-## Scope
+---
 
-Built strictly to the brief's scope: SKU-level weekly demand forecasting,
-stockout/overstock risk scoring, a planning dashboard, and a scoring API.
-Explicitly out of scope (per the brief): live system integrations, price
-optimization, real-time pipelines, automated purchase-order placement.
+## 📈 Forecast Review (2:00 PM)
+
+Select a SKU using the sidebar.
+
+Navigate to:
+
+```text
+Tab 2 → Forecast vs Actual
+```
+
+Questions to ask:
+
+- Does forecast follow historical demand?
+- Is demand becoming seasonal?
+- Should inventory strategy change?
+
+---
+
+## 🎯 Outcome
+
+✔ Data-driven inventory planning
+
+✔ Reduced stockouts
+
+✔ Reduced overstock
+
+✔ Clear business impact (£ value) for every recommendation
+
+---
+
+# 📈 Backtest Validation
+
+| Fold | Seasonal-Naive WAPE | FORESIGHT WAPE | Winner |
+|------|--------------------:|---------------:|:------:|
+| 1 | 0.884 | 0.620 | ✅ |
+| 2 | 0.869 | 0.610 | ✅ |
+| 3 | 0.876 | 0.618 | ✅ |
+| 4 | 0.882 | 0.615 | ✅ |
+| 5 | 0.870 | 0.610 | ✅ |
+| 6 | 0.873 | 0.617 | ✅ |
+| **Average** | **0.875** | **0.615** | ✅ |
+| **Improvement** | — | **29.7%** | |
+
+**Validation Method**
+
+- Rolling-Origin Cross Validation
+- Expanding Training Window
+- 8-week Forecast Horizon
+
+### Validation Principles
+
+- ✅ Beats baseline in every fold
+- ✅ Stable performance across time
+- ✅ Honest backtesting
+- ✅ No future data leakage
+
+See:
+
+```text
+reports/backtest_results.csv
+```
+
+---
+
+# ✅ Deliverables
+
+| ID | Deliverable | Status | Location |
+|----|------------|:------:|---------|
+| D1 | Data Pipeline | ✅ | `src/pipeline.py` |
+| D2 | EDA Memo | ✅ | `reports/eda_memo.md` |
+| D3 | Forecast Model | ✅ | `src/forecast.py` |
+| D4 | Risk Scoring | ✅ | `src/risk.py` |
+| D5 | Streamlit Dashboard | ✅ | `app/streamlit_app.py` |
+| D6 | FastAPI Service | ✅ | `service/main.py` |
+| D7 | Executive Readout | ✅ | `reports/executive_readout.pptx` |
+
+---
+
+# 📂 Project Files
+
+| File | Purpose |
+|------|---------|
+| `src/pipeline.py` | Data ingestion, cleaning and feature engineering |
+| `src/forecast.py` | Forecast model and rolling-origin validation |
+| `src/risk.py` | Inventory risk scoring |
+| `app/streamlit_app.py` | Interactive dashboard |
+| `service/main.py` | FastAPI service |
+| `reports/eda_memo.md` | EDA findings |
+| `reports/backtest_results.csv` | Validation metrics |
+
+---
+
+# 🎥 Demo Video
+
+> **Coming Soon**
+
+The demo will include:
+
+- Repository overview
+- Data pipeline
+- Dashboard walkthrough
+- Forecasting
+- Inventory risk analysis
+- API demonstration
+- Business recommendations
+
+---
+
+# ❓ Frequently Asked Questions
+
+<details>
+
+<summary>Can I run the dashboard without downloading the raw dataset?</summary>
+
+Yes.
+
+All processed datasets inside `data/processed/` are included in the repository.
+
+Simply run:
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+</details>
+
+<details>
+
+<summary>How do I regenerate forecasts?</summary>
+
+```bash
+python src/forecast.py
+```
+
+The dashboard automatically loads the updated forecast.
+
+</details>
+
+<details>
+
+<summary>Can I integrate this with another system?</summary>
+
+Yes.
+
+The FastAPI service exposes REST endpoints.
+
+Example:
+
+```text
+GET /sku/{sku_id}
+```
+
+Returns:
+
+- Forecast
+- Risk Score
+- Recommended Action
+
+</details>
+
+<details>
+
+<summary>Is the inventory data real?</summary>
+
+No.
+
+Inventory snapshots are simulated using industry-standard reorder-point logic for this engagement and should be replaced with real inventory data in production.
+
+</details>
+
+---
+
+# 📚 References
+
+- **Dataset:** UCI Machine Learning Repository — Online Retail II
+- **Forecast Validation:** Rolling-Origin Cross Validation
+- **Model:** LightGBM
+- **Dashboard:** Streamlit
+- **Visualization:** Plotly
+- **API:** FastAPI
+- **Deployment:** Streamlit Community Cloud, Render, Railway
+
+---
+
+# 🛠️ Technology Stack
+
+| Category | Technologies |
+|-----------|--------------|
+| Language | Python |
+| Data Processing | Pandas, NumPy |
+| Machine Learning | LightGBM, Scikit-learn |
+| Visualization | Plotly, Matplotlib |
+| Dashboard | Streamlit |
+| API | FastAPI |
+| Validation | Rolling-Origin Cross Validation |
+| Data Storage | CSV |
+
+---
+
+# 📄 License & Attribution
+
+**Project**
+
+FORESIGHT — Demand & Inventory Intelligence Platform
+
+**Engagement**
+
+4-Week Data Science Internship
+
+**Organization**
+
+Zidio Development
+
+**Track**
+
+Data Science & Analytics
+
+**Client**
+
+NorthBay Living
+
+---
+
+## ✅ Project Status
+
+**Production Ready**
+
+Last Updated: **July 2026**
