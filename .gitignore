@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+*.egg-info/
+.ipynb_checkpoints/
+reports/exec_thumbs.jpg
+data/raw/online_retail_II.xlsx
