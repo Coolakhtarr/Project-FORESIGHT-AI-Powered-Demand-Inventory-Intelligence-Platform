@@ -432,42 +432,6 @@ Questions to ask:
 
 ---
 
-## 📈 Backtest Validation
-
-| Fold | Seasonal-Naive WAPE | FORESIGHT WAPE | Winner |
-|------|--------------------:|---------------:|:------:|
-| 1 | 0.884 | 0.620 | ✅ |
-| 2 | 0.869 | 0.610 | ✅ |
-| 3 | 0.876 | 0.618 | ✅ |
-| 4 | 0.882 | 0.615 | ✅ |
-| 5 | 0.870 | 0.610 | ✅ |
-| 6 | 0.873 | 0.617 | ✅ |
-| **Average** | **0.875** | **0.615** | ✅ |
-| **Improvement** | — | **29.7%** | |
-
-**Validation Method**
-
-- Rolling-Origin Cross Validation
-- Expanding Training Window
-- 8-week Forecast Horizon
-
-#### Validation Principles
-
-- ✅ Beats baseline in every fold
-- ✅ Stable performance across time
-- ✅ Honest backtesting
-- ✅ No future data leakage
-
-See:
-
-```text
-reports/backtest_results.csv
-```
-
----
-
-## ✅ Deliverables
-
 | ID | Deliverable | Status | Location |
 |----|------------|:------:|---------|
 | D1 | Data Pipeline | ✅ | `src/pipeline.py` |
