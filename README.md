@@ -12,7 +12,7 @@ Built as a 4-week data science engagement for **NorthBay Living** (Zidio Develop
 |---|---|
 | **Live Dashboard** | [Streamlit Cloud -](https://project-foresight-ai-powered-demand-inventory-intelligence-pla.streamlit.app/#prioritised-action-list) |
 | **Scoring API** | [FastAPI - ](https://your-api-name.onrender.com/docs) |
-| **Demo Video** | [YouTube 5-min walkthrough -](#) |
+| **Demo Video** | [YouTube 5-min walkthrough -](https://youtu.be/RKYk4JbTgvk) |
 | **GitHub Repository** | [Coolakhtarr/Project-FORESIGHT-...](https://github.com/Coolakhtarr/Project-FORESIGHT-AI-Powered-Demand-Inventory-Intelligence-Platform) |
 
 ---
