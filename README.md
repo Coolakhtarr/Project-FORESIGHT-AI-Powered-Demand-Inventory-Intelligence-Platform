@@ -316,6 +316,7 @@ foresight/
 ---
 
 ## 🚀 Deployment
+The application is deployed on Streamlit Cloud, enabling non-technical stakeholders to access the dashboard directly through a web browser without local installation. The repository also includes a FastAPI service to support future API-based integrations with enterprise systems.
 
 ### 🌐 Dashboard (Streamlit Community Cloud)
 
