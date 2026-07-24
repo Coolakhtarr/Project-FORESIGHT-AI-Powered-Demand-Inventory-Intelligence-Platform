@@ -533,6 +533,7 @@ Inventory snapshots are simulated using industry-standard reorder-point logic fo
 - **Deployment:** Streamlit Community Cloud, Render, Railway
 
 ---
+**Note**: The live demonstration is deployed as a Streamlit application for ease of use by non-technical stakeholders. The repository also includes a FastAPI service that exposes the forecasting and inventory decision engine for future integration with ERP systems, e-commerce platforms, or other enterprise applications.
 
 ## 📄 License & Attribution
 
