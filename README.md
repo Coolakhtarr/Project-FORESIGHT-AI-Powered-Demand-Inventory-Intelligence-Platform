@@ -153,47 +153,24 @@
 | Metric | Value |
 |---|---|
 | **SKUs Monitored** | 200 (top by revenue) |
-| **Revenue at Risk (Stockouts)** | ~£156,400 |
-| **Capital Locked (Overstock)** | ~£45,230 |
-| **Total Value at Stake** | ~£201,630 |
-| **SKUs Needing Urgent Reorder** | 42 (RED quadrant) |
-| **SKUs Needing Markdown/Clear** | 8 (PURPLE quadrant) |
-| **SKUs with Unpredictable Demand** | 3 (YELLOW quadrant) |
-| **SKUs in Healthy State** | 147 (GREEN quadrant) |
+| **Revenue at Risk (Stockouts)** | ~£204,185 |
+| **Capital Locked (Overstock)** | ~£43,403 |
+| **SKUs Needing Urgent Reorder** | 83 |
+| **SKUs Needing Markdown/Clear** | 12|
+| **SKUs with Unpredictable Demand** | 0 |
+| **SKUs in Healthy State** | 105 |
 
 ---
 
 
 ## Data
+- **Source**: the public UCI Online Retail II dataset — real UK online retailer transactions, Dec 2009 – Dec 2011 (~1.07M rows). Used in place of a proprietary NorthBay extract because it provides genuine, sufficiently long transaction history for real seasonality analysis and honest backtesting.
 
-**Source:** the public UCI *Online Retail II* dataset — real UK online
-retailer transactions, Dec 2009 – Dec 2011 (~1.07M rows). Used in place of
-a proprietary NorthBay extract because it provides genuine, sufficiently
-long transaction history for real seasonality analysis and honest
-backtesting.
+**Raw data file note**: the raw extract is provided as two files split by year — data/raw/online_retail_II_2009-2010.xlsx (19MB) and data/raw/online_retail_II_2010-2011.xlsx (20MB) — instead of one 44MB file, so each is under GitHub's 25MB web-upload limit (git push via command line has no such limit, but this keeps drag-and-drop upload working too). The pipeline (src/pipeline.py) automatically detects and loads either this two-file split or a single combined online_retail_II.xlsx, if you happen to have that instead — no config needed either way. All processed outputs (data/processed/*.csv) are also committed, so the dashboard, API, forecast, and risk scoring all run immediately without needing the raw files at all.
 
-> **Raw data file note:** `data/raw/online_retail_II.xlsx` (44MB) is not
-> committed to this repository — GitHub's web upload UI caps individual
-> files at 25MB (git push via command line allows up to 100MB, so this
-> only affects drag-and-drop uploads). Download it directly from the
-> [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/502/online+retail+ii)
-> or [Kaggle](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci)
-> and place it at `data/raw/online_retail_II.xlsx` before running
-> `python src/pipeline.py`. All processed outputs (`data/processed/*.csv`)
-> **are** committed, so the dashboard, API, forecast, and risk scoring all
-> run immediately without needing the raw file at all.
+**Important, stated plainly**: the source data has no inventory records. inventory_snapshots (stock levels, lead time, reorder point) is simulated using a standard reorder-point formula (95% service level, category-specific lead times). This is a documented modelling assumption — see reports/eda_memo.md §1 for the exact method — and should be replaced with NorthBay's real inventory feed before this system drives live purchase orders. It does not affect the demand model, which trains entirely on real transaction history.
 
-**Important, stated plainly:** the source data has no inventory records.
-`inventory_snapshots` (stock levels, lead time, reorder point) is
-**simulated** using a standard reorder-point formula (95% service level,
-category-specific lead times). This is a documented modelling assumption —
-see `reports/eda_memo.md` §1 for the exact method — and should be replaced
-with NorthBay's real inventory feed before this system drives live
-purchase orders. It does not affect the demand model, which trains
-entirely on real transaction history.
-
-The catalog was narrowed to the **top 200 SKUs by revenue**, matching the
-brief's stated NorthBay scale.
+The catalog was narrowed to the top 200 SKUs by revenue, matching the brief's stated NorthBay scale.
 
 ## Setup & run (reproduces end-to-end from raw data)
 
