@@ -2,7 +2,7 @@
 
 ## Machine Learning • Forecasting • Inventory Optimization • Business Intelligence
 
-Project FORESIGHT is an end-to-end data science solution developed during a 4-week **Data Science & Analytics Internship at Zidio Development**. Designed for **NorthBay Living**, the platform enables retailers to forecast demand, assess inventory risks, prioritize replenishment and markdown decisions, and support data-driven inventory planning through an interactive Streamlit application.
+### Project FORESIGHT is an end-to-end data science solution developed during a 4-week **Data Science & Analytics Internship at Zidio Development**. Designed for **NorthBay Living**, the platform enables retailers to forecast demand, assess inventory risks, prioritize replenishment and markdown decisions, and support data-driven inventory planning through an interactive Streamlit application.
 ---
 
 ## 🎯 Quick Links
