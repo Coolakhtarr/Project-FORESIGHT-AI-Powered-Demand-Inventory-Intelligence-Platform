@@ -117,7 +117,7 @@
 ### **System Architecture**
 
               ▼
-<img width="1024" height="1536" alt="forecast architecture diagram" src="https://github.com/user-attachments/assets/2d7693f7-85fe-41be-b10f-a0bffd3122ed" />
+<img width="480" height="720" alt="forecast architecture diagram" src="https://github.com/user-attachments/assets/2d7693f7-85fe-41be-b10f-a0bffd3122ed" />
 
 ### **Tech Stack**
 
