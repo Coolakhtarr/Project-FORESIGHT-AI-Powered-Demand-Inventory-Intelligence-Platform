@@ -1,9 +1,8 @@
-# 📦 Project FORESIGHT — Demand & Inventory Intelligence
+# 📦 Project FORESIGHT — AI-Powered Demand Forecasting & Inventory Intelligence Platform
 
-**AI-powered demand forecasting and inventory optimization platform**
+## Machine Learning • Forecasting • Inventory Optimization • Business Intelligence
 
-Built as a 4-week data science engagement for **NorthBay Living** (Zidio Development, Data Science & Analytics track)
-
+Project FORESIGHT is an end-to-end data science solution developed during a 4-week **Data Science & Analytics Internship at Zidio Development**. Designed for **NorthBay Living**, the platform enables retailers to forecast demand, assess inventory risks, prioritize replenishment and markdown decisions, and support data-driven inventory planning through an interactive Streamlit application.
 ---
 
 ## 🎯 Quick Links
